@@ -1,0 +1,1239 @@
+{
+	"info": {
+		"_postman_id": "73f94b4e-3f26-42f6-8bb3-740eed383f84",
+		"name": " api testing homework",
+		"description": " Api testing homework",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Positive script",
+			"item": [
+				{
+					"name": "Documented function",
+					"item": [
+						{
+							"name": "Test  basic function",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "388a34b8-6ac4-443f-823b-c9f95de601aa",
+										"exec": [
+											"pm.test(\"test basic function\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const professions = pm.variables.get(\"Phrase\").toLowerCase().split('');\r",
+											"    const isEvery = (vacancy) => professions\r",
+											"        .every((v) => vacancy.name.toLowerCase().includes(v));\r",
+											"    const getVacancyCount = jsonData.items.filter(isEvery).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{Phrase}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{Phrase}}"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test  OR",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fc4aaee5-6fdd-47f9-a43c-ed84ae99417f",
+										"exec": [
+											"pm.test(\"test OR\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const word1 = pm.variables.get(\"word1\").toLowerCase();\r",
+											"    const word2 = pm.variables.get(\"word2\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => \r",
+											"        {\r",
+											"            const name = v.name.toLowerCase();\r",
+											"            return name.toLowerCase().includes(word1) || name.toLowerCase().includes(word2);\r",
+											"        })\r",
+											"        .length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{word1}}  OR  {{word2}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{word1}}  OR  {{word2}}"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test  AND",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a9e00326-6009-4e63-a52a-afb75b978cb8",
+										"exec": [
+											"pm.test(\"test AND\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const word1 = pm.variables.get(\"word1\").toLowerCase();\r",
+											"    const word2 = pm.variables.get(\"word2\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => \r",
+											"        {\r",
+											"            const name = v.name.toLowerCase();\r",
+											"            return name.toLowerCase().includes(word1) & name.toLowerCase().includes(word2);\r",
+											"        })\r",
+											"        .length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{word1}}  AND {{word2}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{word1}}  AND {{word2}}"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test search wordform",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "24081e61-e5e4-4ee9-82eb-528cd4ddd870",
+										"exec": [
+											"pm.test(\"test search wordform\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"wordform\");\r",
+											"    const VRegExp = new RegExp(`${profession}|(|ь|я|ю|ем|е|и|ей|ям|ями|ях)`, `i`);\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => VRegExp.test(v.name)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{wordform}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{wordform}}"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test search collocation",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "52f26393-25e5-4069-a437-d55c79d06bd2",
+										"exec": [
+											"pm.test(\"test search collocation\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const professionPattern = pm.variables.get(\"Phrase\").toLowerCase().split(' ').join(`[\\\\W\\\\s]*`);\r",
+											"    const VRegExp = new RegExp(professionPattern, `i`);\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => VRegExp.test(v.name)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text=\"{{Phrase}}\"&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "\"{{Phrase}}\""
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test pattern",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "117569c7-42b5-469d-b3bd-4fc7e0bb2978",
+										"exec": [
+											"pm.test(\"test pattern with *\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"ShortWordform\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => v.name.toLowerCase().includes(profession)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{ShortWordform}}*&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{ShortWordform}}*"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test NO_wordform",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4b806c98-4a00-484e-bc01-6565d241d301",
+										"exec": [
+											"pm.test(\"test search NO_wordform\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"NOT_wordform\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => v.name.toLowerCase().includes(profession)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text=!{{NOT_wordform}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "!{{NOT_wordform}}"
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test NOT",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b27addf1-b69b-48dd-8fdb-78d9999824dd",
+										"exec": [
+											"pm.test(\"test search NOT_word\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"word1\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => !v.name.toLowerCase().includes(profession)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text=NOT {{word1}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "NOT {{word1}}",
+											"description": " "
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "boundary values",
+					"item": [
+						{
+							"name": "Test minValue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "71afbce1-a694-4cf0-ac8d-f160ba802110",
+										"exec": [
+											"pm.test(\"search value\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"minValue\").toLowerCase();\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => v.name.toLowerCase().includes(profession)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{minValue}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{minValue}}",
+											"description": " "
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test maxValue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "372d6647-1676-4321-b421-61f178aaeb67",
+										"exec": [
+											"pm.test(\"search value\", function () {\r",
+											"    const jsonData = pm.response.json();\r",
+											"    const profession = pm.variables.get(\"maxValue\").toLowerCase();\r",
+											"    jsonData.items.forEach((v) => console.log(v.name.toLowerCase(), v.name.toLowerCase().includes(profession)));\r",
+											"    const getVacancyCount = jsonData.items.filter((v) => v.name.toLowerCase().includes(profession)).length;\r",
+											"    pm.expect(jsonData.items.length).to.eql(getVacancyCount);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}?text={{maxValue}}&search_field=name",
+									"host": [
+										"{{base_url}}"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{maxValue}}",
+											"description": " "
+										},
+										{
+											"key": "search_field",
+											"value": "name"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "12843738-bba5-414a-9029-47ec890d6112",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "bb9d92af-43cd-4bdf-9638-fb56d9ceb051",
+								"type": "text/javascript",
+								"exec": [
+									"const schema = {",
+									"    \"$schema\": \"http://json-schema.org/draft-07/schema\",",
+									"    \"$id\": \"http://example.com/example.json\",",
+									"    \"type\": \"object\",",
+									"    \"title\": \"The root schema\",",
+									"    \"description\": \"The root schema comprises the entire JSON document.\",",
+									"    \"default\": {},",
+									"    \"examples\": [",
+									"        {",
+									"            \"items\": [],",
+									"            \"found\": 0,",
+									"            \"pages\": 1,",
+									"            \"per_page\": 20,",
+									"            \"page\": 0,",
+									"            \"clusters\": null,",
+									"            \"arguments\": null,",
+									"            \"alternate_url\": \"https://hh.ru/search/vacancy?enable_snippets=true&text=asdsadsadsadasdasd\"",
+									"        }",
+									"    ],",
+									"    \"required\": [",
+									"        \"items\",",
+									"        \"found\",",
+									"        \"pages\",",
+									"        \"per_page\",",
+									"        \"page\",",
+									"        \"clusters\",",
+									"        \"arguments\",",
+									"        \"alternate_url\"",
+									"    ],",
+									"    \"properties\": {",
+									"        \"items\": {",
+									"            \"$id\": \"#/properties/items\",",
+									"            \"type\": \"array\",",
+									"            \"title\": \"The items schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": [],",
+									"            \"examples\": [",
+									"                []",
+									"            ],",
+									"            \"additionalItems\": true,",
+									"            \"items\": {",
+									"                \"$id\": \"#/properties/items/items\"",
+									"            }",
+									"        },",
+									"        \"found\": {",
+									"            \"$id\": \"#/properties/found\",",
+									"            \"type\": \"integer\",",
+									"            \"title\": \"The found schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": 0,",
+									"            \"examples\": [",
+									"                0",
+									"            ]",
+									"        },",
+									"        \"pages\": {",
+									"            \"$id\": \"#/properties/pages\",",
+									"            \"type\": \"integer\",",
+									"            \"title\": \"The pages schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": 0,",
+									"            \"examples\": [",
+									"                1",
+									"            ]",
+									"        },",
+									"        \"per_page\": {",
+									"            \"$id\": \"#/properties/per_page\",",
+									"            \"type\": \"integer\",",
+									"            \"title\": \"The per_page schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": 0,",
+									"            \"examples\": [",
+									"                20",
+									"            ]",
+									"        },",
+									"        \"page\": {",
+									"            \"$id\": \"#/properties/page\",",
+									"            \"type\": \"integer\",",
+									"            \"title\": \"The page schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": 0,",
+									"            \"examples\": [",
+									"                0",
+									"            ]",
+									"        },",
+									"        \"clusters\": {",
+									"            \"$id\": \"#/properties/clusters\",",
+									"            \"type\": \"null\",",
+									"            \"title\": \"The clusters schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": null,",
+									"            \"examples\": [",
+									"                null",
+									"            ]",
+									"        },",
+									"        \"arguments\": {",
+									"            \"$id\": \"#/properties/arguments\",",
+									"            \"type\": \"null\",",
+									"            \"title\": \"The arguments schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": null,",
+									"            \"examples\": [",
+									"                null",
+									"            ]",
+									"        },",
+									"        \"alternate_url\": {",
+									"            \"$id\": \"#/properties/alternate_url\",",
+									"            \"type\": \"string\",",
+									"            \"title\": \"The alternate_url schema\",",
+									"            \"description\": \"An explanation about the purpose of this instance.\",",
+									"            \"default\": \"\",",
+									"            \"examples\": [",
+									"                \"https://hh.ru/search/vacancy?enable_snippets=true&text=asdsadsadsadasdasd\"",
+									"            ]",
+									"        }",
+									"    },",
+									"    \"additionalProperties\": true",
+									"}",
+									"",
+									"const data1 = pm.response.json();",
+									"",
+									"pm.test('Response body structure is valid', function () {",
+									"    pm.expect(tv4.validate(data1, schema)).to.be.true;",
+									"});",
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1f59c349-4c59-446a-baf1-5e8b8d9b75f4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d3dc9683-4c0a-465a-ae80-3e395f75e43a",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Negative script",
+			"item": [
+				{
+					"name": " Strange characters in a string",
+					"item": [
+						{
+							"name": "Test RegExp",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{regExp}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{regExp}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test Emoji",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{emoji}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{emoji}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test One space",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{one_space}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{one_space}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test Strange_encoding",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{strange_encoding}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{strange_encoding}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f2bb32f6-5a02-46c2-807d-60c8295603fe",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "450a3a80-3a1b-4606-a190-62e4b955b64d",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Close to boundary values",
+					"item": [
+						{
+							"name": "Test longString",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{longString}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{longString}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						},
+						{
+							"name": "Test Epmty field",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text=",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": ""
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Values ​​well above the border",
+					"item": [
+						{
+							"name": "Test veryLongString",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "fb2e974f-18af-4abd-b89a-e80c5c905046",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.hh.ru/vacancies?text={{veryLongString}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"hh",
+										"ru"
+									],
+									"path": [
+										"vacancies"
+									],
+									"query": [
+										{
+											"key": "text",
+											"value": "{{veryLongString}}"
+										}
+									]
+								},
+								"description": "https://api.hh.ru/vacancies?text="
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ed3d3877-4747-4461-a20c-49517abe3370",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "fe3e04f0-003f-49cf-98f3-9b1c740aaec3",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "322303ec-5641-4c2f-a967-25f67708d869",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bd5816b5-b590-4e6d-9dee-7206c53f24a1",
+						"type": "text/javascript",
+						"exec": [
+							"const schema = {",
+							"    \"$schema\": \"http://json-schema.org/draft-07/schema\",",
+							"    \"$id\": \"http://example.com/example.json\",",
+							"    \"type\": \"object\",",
+							"    \"title\": \"The root schema\",",
+							"    \"description\": \"The root schema comprises the entire JSON document.\",",
+							"    \"default\": {},",
+							"    \"examples\": [",
+							"        {",
+							"            \"items\": [],",
+							"            \"found\": 0,",
+							"            \"pages\": 1,",
+							"            \"per_page\": 20,",
+							"            \"page\": 0,",
+							"            \"clusters\": null,",
+							"            \"arguments\": null,",
+							"            \"alternate_url\": \"https://hh.ru/search/vacancy?enable_snippets=true&text=asdsadsadsadasdasd\"",
+							"        }",
+							"    ],",
+							"    \"required\": [",
+							"        \"items\",",
+							"        \"found\",",
+							"        \"pages\",",
+							"        \"per_page\",",
+							"        \"page\",",
+							"        \"clusters\",",
+							"        \"arguments\",",
+							"        \"alternate_url\"",
+							"    ],",
+							"    \"properties\": {",
+							"        \"items\": {",
+							"            \"$id\": \"#/properties/items\",",
+							"            \"type\": \"array\",",
+							"            \"title\": \"The items schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": [],",
+							"            \"examples\": [",
+							"                []",
+							"            ],",
+							"            \"additionalItems\": true,",
+							"            \"items\": {",
+							"                \"$id\": \"#/properties/items/items\"",
+							"            }",
+							"        },",
+							"        \"found\": {",
+							"            \"$id\": \"#/properties/found\",",
+							"            \"type\": \"integer\",",
+							"            \"title\": \"The found schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": 0,",
+							"            \"examples\": [",
+							"                0",
+							"            ]",
+							"        },",
+							"        \"pages\": {",
+							"            \"$id\": \"#/properties/pages\",",
+							"            \"type\": \"integer\",",
+							"            \"title\": \"The pages schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": 0,",
+							"            \"examples\": [",
+							"                1",
+							"            ]",
+							"        },",
+							"        \"per_page\": {",
+							"            \"$id\": \"#/properties/per_page\",",
+							"            \"type\": \"integer\",",
+							"            \"title\": \"The per_page schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": 0,",
+							"            \"examples\": [",
+							"                20",
+							"            ]",
+							"        },",
+							"        \"page\": {",
+							"            \"$id\": \"#/properties/page\",",
+							"            \"type\": \"integer\",",
+							"            \"title\": \"The page schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": 0,",
+							"            \"examples\": [",
+							"                0",
+							"            ]",
+							"        },",
+							"        \"clusters\": {",
+							"            \"$id\": \"#/properties/clusters\",",
+							"            \"type\": \"null\",",
+							"            \"title\": \"The clusters schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": null,",
+							"            \"examples\": [",
+							"                null",
+							"            ]",
+							"        },",
+							"        \"arguments\": {",
+							"            \"$id\": \"#/properties/arguments\",",
+							"            \"type\": \"null\",",
+							"            \"title\": \"The arguments schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": null,",
+							"            \"examples\": [",
+							"                null",
+							"            ]",
+							"        },",
+							"        \"alternate_url\": {",
+							"            \"$id\": \"#/properties/alternate_url\",",
+							"            \"type\": \"string\",",
+							"            \"title\": \"The alternate_url schema\",",
+							"            \"description\": \"An explanation about the purpose of this instance.\",",
+							"            \"default\": \"\",",
+							"            \"examples\": [",
+							"                \"https://hh.ru/search/vacancy?enable_snippets=true&text=asdsadsadsadasdasd\"",
+							"            ]",
+							"        }",
+							"    },",
+							"    \"additionalProperties\": true",
+							"}",
+							"",
+							"const data1 = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response body structure is valid', function () {",
+							"    pm.expect(tv4.validate(data1, schema)).to.be.true;",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "headerPrefix",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b31d56c9-9a9a-47e4-8f55-1b64f1927ce3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d6e82c76-c192-47d8-8569-255749e9370a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "5c4f6759-978c-45a4-bd34-bec6cbf75a16",
+			"key": "wordform",
+			"value": "водителе"
+		},
+		{
+			"id": "4ba31a59-010c-4e90-9fcb-05f266e3a3b2",
+			"key": "Phrase",
+			"value": "Kotlin Java"
+		},
+		{
+			"id": "46ab9dc7-9337-44d4-bd11-265be295f7f8",
+			"key": "NOT_wordform",
+			"value": "водителя"
+		},
+		{
+			"id": "5dc73c2c-5004-43c5-b8bd-3e6bd3f07dce",
+			"key": "ShortWordform",
+			"value": "водит"
+		},
+		{
+			"id": "4bfbb965-1265-450b-83f8-7c039bcdfe08",
+			"key": "base_url",
+			"value": "https://api.hh.ru/vacancies"
+		},
+		{
+			"id": "8900b873-5210-43d2-8f66-269661a57dba",
+			"key": "word1",
+			"value": "Kotlin"
+		},
+		{
+			"id": "d32ee753-4baf-42ce-aff3-c1cd1401f284",
+			"key": "word2",
+			"value": "Java"
+		},
+		{
+			"id": "93f11d69-f7b2-47c3-8d15-e4e49836add0",
+			"key": "minValue",
+			"value": "f"
+		},
+		{
+			"id": "fcbdc605-80ed-4d4b-a2ff-84f213b4ae64",
+			"key": "maxValue",
+			"value": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat"
+		},
+		{
+			"id": "28cdbca2-71d6-40c4-bf69-82f7a62d4af6",
+			"key": "regExp",
+			"value": "^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$ "
+		},
+		{
+			"id": "5020e501-e56b-470c-acda-e7c05a2a801e",
+			"key": "strange_encoding",
+			"value": "Трёџ яѓяъшэ"
+		},
+		{
+			"id": "5e028918-ca45-4e5a-9ba6-78b22bfacab4",
+			"key": "emoji",
+			"value": "👥⬅️"
+		},
+		{
+			"id": "33aff1b0-b745-4fbd-a439-3695bf5530d2",
+			"key": "veryLongString",
+			"value": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lob"
+		},
+		{
+			"id": "1a33d0ff-69bd-47a9-a404-b49c2c1520bf",
+			"key": "one_space",
+			"value": " "
+		},
+		{
+			"id": "f3d28cf8-d520-4e1a-96a2-a0c537272601",
+			"key": "longString",
+			"value": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobor"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
